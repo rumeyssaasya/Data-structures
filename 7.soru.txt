@@ -1,0 +1,81 @@
+******************************************- Write the function that prints the record with the longest name in the list. ******************************************
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Structure to store student information
+typedef struct Student {
+    int number;
+    char name[50];
+    int age;
+    struct Student* next;
+} Student;
+
+// Function to insert a new student node at the end of the list
+void insertStudent(Student** head, int number, const char* name, int age) {
+    Student* newNode = (Student*)malloc(sizeof(Student));
+    newNode->number = number;
+    snprintf(newNode->name, sizeof(newNode->name), "%s", name);
+    newNode->age = age;
+    newNode->next = NULL;
+
+    if (*head == NULL) {
+        *head = newNode;
+    } else {
+        Student* current = *head;
+        while (current->next != NULL) {
+            current = current->next;
+        }
+        current->next = newNode;
+    }
+}
+
+// Function to find and print the record with the longest name
+void printLongestName(Student* head) {
+    int maxNameLength = 0;
+    char longestName[50];
+    
+    while (head != NULL) {
+        int currentNameLength = strlen(head->name);
+        if (currentNameLength > maxNameLength) {
+            maxNameLength = currentNameLength;
+            snprintf(longestName, sizeof(longestName), "%s", head->name);
+        }
+        head = head->next;
+    }
+    
+    printf("The longest name in the list: %s\n", longestName);
+    printf("Length: %d\n", maxNameLength);
+}
+
+// Function to free memory allocated for the linked list
+void freeStudents(Student* head) {
+    while (head != NULL) {
+        Student* temp = head;
+        head = head->next;
+        free(temp);
+    }
+}
+
+int main() {
+    Student* head = NULL;
+
+    // Insert student nodes into the linked list
+    insertStudent(&head, 201, "Saliha", 27);
+    insertStudent(&head, 203, "Ece", 19);
+    insertStudent(&head, 205, "Abdurrahmangazi", 22);
+    insertStudent(&head, 207, "John Smith", 30);
+    insertStudent(&head, 207, "Mehmetali", 30);
+    // Add more students as needed...
+
+    // Print the record with the longest name
+    printf("Student Information:\n");
+    printLongestName(head);
+
+    // Free allocated memory for the linked list
+    freeStudents(head);
+
+    return 0;
+}

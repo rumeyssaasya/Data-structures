@@ -1,0 +1,93 @@
+****************************************** -Write the function that deletes the next node from the node with the searched student name in the list. ******************************************
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Structure to store student information
+typedef struct Student {
+    int number;
+    char name[50];
+    int age;
+    struct Student* next;
+} Student;
+
+// Function to insert a new student node at the end of the list
+void insertStudent(Student** head, int number, const char* name, int age) {
+    Student* newNode = (Student*)malloc(sizeof(Student));
+    newNode->number = number;
+    snprintf(newNode->name, sizeof(newNode->name), "%s", name);
+    newNode->age = age;
+    newNode->next = NULL;
+
+    if (*head == NULL) {
+        *head = newNode;
+    } else {
+        Student* current = *head;
+        while (current->next != NULL) {
+            current = current->next;
+        }
+        current->next = newNode;
+    }
+}
+
+// Function to delete the next node from the node with the searched student name
+void deleteNextNode(Student* head, const char* searchName) {
+    while (head != NULL && head->next != NULL) {
+        if (strcmp(head->name, searchName) == 0) {
+            Student* temp = head->next;
+            head->next = head->next->next;
+            free(temp);
+            return; // Node found and deleted, exit the function
+        }
+        head = head->next;
+    }
+}
+
+// Function to print student information
+void printStudents(Student* head) {
+    int count = 1;
+    while (head != NULL) {
+        printf("%d- %s %d %d\n", count, head->name, head->age, head->number);
+        head = head->next;
+        count++;
+    }
+}
+
+// Function to free memory allocated for the linked list
+void freeStudents(Student* head) {
+    while (head != NULL) {
+        Student* temp = head;
+        head = head->next;
+        free(temp);
+    }
+}
+
+int main() {
+    Student* head = NULL;
+
+    // Insert student nodes into the linked list
+    insertStudent(&head, 201, "Saliha", 27);
+    insertStudent(&head, 203, "Ece", 19);
+    insertStudent(&head, 205, "John", 22);
+    // Add more students as needed...
+
+    // Print original student information
+    printf("Original Student Information:\n");
+    printStudents(head);
+
+    // Search for student name and delete the next node
+    const char* searchName = "Ece";
+    printf("\nDeleting next node after student %s:\n", searchName);
+    deleteNextNode(head, searchName);
+
+    // Print updated student information
+    printf("\nUpdated Student Information:\n");
+    printStudents(head);
+
+    // Free allocated memory for the linked list
+    freeStudents(head);
+
+    return 0;
+}

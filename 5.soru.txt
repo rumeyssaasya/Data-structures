@@ -1,0 +1,74 @@
+******************************************-Write the function that searches records by student name in the list.******************************************
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Structure to store student information
+typedef struct Student {
+    int number;
+    char name[50];
+    int age;
+    struct Student* next;
+} Student;
+
+// Function to insert a new student node at the end of the list
+void insertStudent(Student** head, int number, const char* name, int age) {
+    Student* newNode = (Student*)malloc(sizeof(Student));
+    newNode->number = number;
+    snprintf(newNode->name, sizeof(newNode->name), "%s", name);
+    newNode->age = age;
+    newNode->next = NULL;
+
+    if (*head == NULL) {
+        *head = newNode;
+    } else {
+        Student* current = *head;
+        while (current->next != NULL) {
+            current = current->next;
+        }
+        current->next = newNode;
+    }
+}
+
+// Function to search for a student by name and print the matching records
+void searchStudentByName(Student* head, const char* searchName) {
+    int count = 1;
+    while (head != NULL) {
+        if (strcmp(head->name, searchName) == 0) {
+            printf("%d- %s %d %d\n", count, head->name, head->age, head->number);
+        }
+        head = head->next;
+        count++;
+    }
+}
+
+// Function to free memory allocated for the linked list
+void freeStudents(Student* head) {
+    while (head != NULL) {
+        Student* temp = head;
+        head = head->next;
+        free(temp);
+    }
+}
+
+int main() {
+    Student* head = NULL;
+
+    // Insert student nodes into the linked list
+    insertStudent(&head, 201, "Saliha", 27);
+    insertStudent(&head, 203, "Ece", 19);
+    insertStudent(&head, 205, "John", 22);
+    insertStudent(&head, 207, "Saliha", 21); // Duplicate name for testing
+    // Add more students as needed...
+
+    // Search for students by name and print matching records
+    const char* searchName = "Saliha";
+    printf("Student Records for %s:\n", searchName);
+    searchStudentByName(head, searchName);
+
+    // Free allocated memory for the linked list
+    freeStudents(head);
+
+    return 0;
+}

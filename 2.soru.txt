@@ -1,0 +1,84 @@
+******************************************-Add 100 randomly generated numbers to the list, write the c code that sorts all the
+numbers entered from largest to smallest and prints them on the screen.******************************************
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Structure for a node in the linked list
+typedef struct Node {
+    int data;
+    struct Node* next;
+} Node;
+
+// Function to insert a new node at the beginning of the list
+void insert(Node** head, int data) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = data;
+    newNode->next = *head;
+    *head = newNode;
+}
+
+// Function to print the linked list
+void printList(Node* head) {
+    Node* current = head;
+    while (current != NULL) {
+        printf("%d ", current->data);
+        current = current->next;
+    }
+    printf("\n");
+}
+
+// Function to sort the linked list in descending order (using bubble sort)
+void sortList(Node* head) {
+    int swapped, temp;
+    Node* current;
+    Node* last = NULL;
+
+    if (head == NULL)
+        return;
+
+    do {
+        swapped = 0;
+        current = head;
+
+        while (current->next != last) {
+            if (current->data < current->next->data) {
+                temp = current->data;
+                current->data = current->next->data;
+                current->next->data = temp;
+                swapped = 1;
+            }
+            current = current->next;
+        }
+        last = current;
+    } while (swapped);
+}
+
+int main() {
+    Node* head = NULL;
+    int i;
+
+    // Generate 100 random numbers and insert them into the linked list
+    for (i = 0; i < 100; i++) {
+        int randomNum = rand() % 1000; // Generate random numbers between 0 and 999
+        insert(&head, randomNum);
+    }
+
+    printf("Original list: ");
+    printList(head);
+
+    // Sort the list in descending order
+    sortList(head);
+
+    printf("\nSorted list (Descending order): ");
+    printList(head);
+
+    // Free the allocated memory
+    while (head != NULL) {
+        Node* temp = head;
+        head = head->next;
+        free(temp);
+    }
+
+    return 0;
+}

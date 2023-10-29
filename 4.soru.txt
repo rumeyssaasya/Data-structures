@@ -1,0 +1,69 @@
+******************************************-Write a function that stores the student number, name and age, traverses all the nodes in the list, writes all the student information on the screen and counts it. ******************************************
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Öğrenci bilgilerini saklamak için bir yapı (struct) tanımla
+typedef struct Student {
+    int number;
+    char name[50];
+    int age;
+    struct Student* next;
+} Student;
+
+// Yeni bir öğrenci düğümünü listenin sonuna eklemek için bir fonksiyon
+void insertStudent(Student** head, int number, const char* name, int age) {
+    Student* newNode = (Student*)malloc(sizeof(Student));
+    newNode->number = number;
+    snprintf(newNode->name, sizeof(newNode->name), "%s", name);
+    newNode->age = age;
+    newNode->next = NULL;
+
+    if (*head == NULL) {
+        *head = newNode;
+    } else {
+        Student* current = *head;
+        while (current->next != NULL) {
+            current = current->next;
+        }
+        current->next = newNode;
+    }
+}
+
+// Öğrenci bilgilerini yazdıran ve öğrenci sayısını hesaplayan fonksiyon
+void printStudents(Student* head) {
+    int count = 0; // Öğrenci sayacı
+    while (head != NULL) {
+        count++;
+        printf("%d- %s %d %d\n", count, head->name, head->age, head->number);
+        head = head->next;
+    }
+    printf("Toplam Öğrenci Sayısı: %d\n", count);
+}
+
+// Bağlı listede ayrılan hafızayı serbest bırakan fonksiyon
+void freeStudents(Student* head) {
+    while (head != NULL) {
+        Student* temp = head;
+        head = head->next;
+        free(temp);
+    }
+}
+
+int main() {
+    Student* head = NULL;
+
+    // Öğrenci düğümlerini bağlı listeye ekleyin
+    insertStudent(&head, 201, "Saliha", 27);
+    insertStudent(&head, 203, "Ece", 19);
+    // Daha fazla öğrenci eklemek için gerekli olan fonksiyonları kullanabilirsiniz...
+
+    // Öğrenci bilgilerini yazdırın ve öğrenci sayısını hesaplayın
+    printf("Öğrenci Bilgileri:\n");
+    printStudents(head);
+
+    // Bağlı listede ayrılan hafızayı serbest bırakın
+    freeStudents(head);
+
+    return 0;
+}

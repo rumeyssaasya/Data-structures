@@ -1,0 +1,95 @@
+******************************************-Write a function that adds all odd numbers to the beginning of the list and all even
+numbers to the end of the list until -1 is entered from the keyboard.******************************************
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct node {
+    int data;
+    struct node*next ;
+};
+
+
+struct node* createNode(int data) {
+    struct node* newNode = (struct node*)malloc(sizeof(struct node));
+    newNode->data =data;
+    newNode->next = NULL;
+    return newNode;
+}
+void addLast(struct node**head,int data){
+    struct node * newNode = createNode(data);
+    newNode->data=data;
+    newNode->next=NULL;
+    if(*head==NULL)
+        *head=newNode;
+    else{
+        struct node*Last=*head;
+        while(Last->next!=NULL){
+            Last=Last->next;
+            
+        }
+        Last->next=newNode;
+    }
+}
+    
+
+void addFront(struct node**head,int data){
+    struct node*newNode=createNode(data);
+    newNode->data=data;
+    newNode->next=*head;
+    *head=newNode;
+    
+}
+    
+
+
+
+void printList(struct node* head){
+    struct node* Last=head;
+    while(Last!=NULL){
+        printf("%d ",Last->data);
+        Last=Last->next;
+    }
+    printf("\n");
+}
+
+
+int main(){
+    struct node *myList=NULL;
+    int number;
+    printf("Enter the number that you want to add,(for out -1):\n");
+    while(1){
+        scanf("%d",&number);
+        if(number==-1){
+        break;
+        }
+        if(number%2==0){
+        addLast(&myList,number);
+            
+        }
+        else{
+        addFront(&myList,number);
+            
+        }
+    }
+    printf("List is: ");
+    printList(myList);
+    while(myList!=NULL){
+        struct node*temp=myList;
+        myList=myList->next;
+        free(temp);
+    
+    }
+    return 0;
+}
+
+
+
+
+
+
+
+
+
